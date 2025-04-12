@@ -1,10 +1,202 @@
-<script type="text/javascript">
-	atOptions = {
-		'key' : '29e25146e02d163d4214ae0af4062f8d',
-		'format' : 'iframe',
-		'height' : 60,
-		'width' : 468,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/29e25146e02d163d4214ae0af4062f8d/invoke.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blue vs Red - Global Click Battle</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .teams {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .team {
+            width: 48%;
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .team:hover {
+            transform: scale(1.02);
+        }
+        
+        .team-blue {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .team-red {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .count {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .total {
+            margin-top: 30px;
+            font-size: 1.2rem;
+        }
+        
+        .leader {
+            border: 5px solid gold;
+            box-shadow: 0 0 20px gold;
+        }
+        
+        .last-click {
+            margin-top: 20px;
+            font-style: italic;
+        }
+        
+        .user-count {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Blue vs Red</h1>
+        <p>The global click battle - join a team and click to contribute!</p>
+        
+        <div class="teams">
+            <div class="team team-blue" id="blue-team">
+                <h2>Team Blue</h2>
+                <div class="count" id="blue-count">0</div>
+                <p>Click to support Blue!</p>
+            </div>
+            
+            <div class="team team-red" id="red-team">
+                <h2>Team Red</h2>
+                <div class="count" id="red-count">0</div>
+                <p>Click to support Red!</p>
+            </div>
+        </div>
+        
+        <div class="total">
+            Total clicks: <span id="total-count">0</span>
+        </div>
+        
+        <div class="last-click" id="last-click">
+            No clicks yet
+        </div>
+    </div>
+    
+    <div class="user-count" id="user-count">
+        0 users online
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+    <script>
+        // Connect to Socket.io server
+        const socket = io('https://blue-red-click-battle.glitch.me');
+        
+        // DOM elements
+        const blueTeam = document.getElementById('blue-team');
+        const redTeam = document.getElementById('red-team');
+        const blueCount = document.getElementById('blue-count');
+        const redCount = document.getElementById('red-count');
+        const totalCount = document.getElementById('total-count');
+        const lastClick = document.getElementById('last-click');
+        const userCount = document.getElementById('user-count');
+        
+        // Track if user has clicked today
+        let hasClicked = false;
+        
+        // Get user's team preference from localStorage
+        let userTeam = localStorage.getItem('userTeam');
+        
+        // Update counts from server
+        socket.on('updateCounts', (data) => {
+            blueCount.textContent = data.blue.toLocaleString();
+            redCount.textContent = data.red.toLocaleString();
+            totalCount.textContent = (data.blue + data.red).toLocaleString();
+            userCount.textContent = `${data.users} users online`;
+            
+            // Highlight leading team
+            if (data.blue > data.red) {
+                blueTeam.classList.add('leader');
+                redTeam.classList.remove('leader');
+            } else if (data.red > data.blue) {
+                redTeam.classList.add('leader');
+                blueTeam.classList.remove('leader');
+            } else {
+                blueTeam.classList.remove('leader');
+                redTeam.classList.remove('leader');
+            }
+        });
+        
+        // Update last click message
+        socket.on('lastClick', (msg) => {
+            lastClick.textContent = msg;
+        });
+        
+        // Handle team clicks
+        blueTeam.addEventListener('click', () => {
+            if (!hasClicked) {
+                socket.emit('click', 'blue');
+                hasClicked = true;
+                userTeam = 'blue';
+                localStorage.setItem('userTeam', 'blue');
+                
+                // Visual feedback
+                blueTeam.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    blueTeam.style.transform = 'scale(1)';
+                }, 200);
+            }
+        });
+        
+        redTeam.addEventListener('click', () => {
+            if (!hasClicked) {
+                socket.emit('click', 'red');
+                hasClicked = true;
+                userTeam = 'red';
+                localStorage.setItem('userTeam', 'red');
+                
+                // Visual feedback
+                redTeam.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    redTeam.style.transform = 'scale(1)';
+                }, 200);
+            }
+        });
+        
+        // Show user's team preference
+        if (userTeam) {
+            lastClick.textContent = `You're on Team ${userTeam.charAt(0).toUpperCase() + userTeam.slice(1)}`;
+        }
+    </script>
+</body>
+</html>
