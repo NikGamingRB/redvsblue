@@ -1,88 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blue vs Red - The Clicker War</title>
-    <!-- Adsterra Ad Script (Example) -->
-    <script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=YOUR-ADSTERRA-CODE"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f3f3f3;
-            padding: 20px;
-        }
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
-        .button {
-            font-size: 1.5rem;
-            padding: 20px 40px;
-            margin: 20px;
-            cursor: pointer;
-            border: none;
-            border-radius: 10px;
-            color: white;
-        }
-        .blue {
-            background-color: #1E90FF;
-        }
-        .red {
-            background-color: #FF6347;
-        }
-        .stats {
-            margin-top: 20px;
-            font-size: 1.25rem;
-        }
-    </style>
-</head>
-<body>
-    <h1>Welcome to the Blue vs Red Clicker War!</h1>
-    
-    <div>
-        <button class="button blue" onclick="clickButton('blue')">Support Blue</button>
-        <button class="button red" onclick="clickButton('red')">Support Red</button>
-    </div>
-
-    <div class="stats">
-        <p>Blue Clicks: <span id="blue-count">0</span></p>
-        <p>Red Clicks: <span id="red-count">0</span></p>
-    </div>
-
-    <!-- Optional Adsterra Banner (Add to body or between content) -->
-    <script type="text/javascript">
-        (function() {
-            var script = document.createElement("script");
-            script.src = "https://your-adsterra-ad-script.js";
-            document.body.appendChild(script);
-        })();
-    </script>
-
-    <script>
-        // Initialize or fetch existing data
-        let blueClicks = localStorage.getItem('blueClicks') || 0;
-        let redClicks = localStorage.getItem('redClicks') || 0;
-
-        // Display initial counts
-        document.getElementById('blue-count').textContent = blueClicks;
-        document.getElementById('red-count').textContent = redClicks;
-
-        // Handle click event
-        function clickButton(team) {
-            if (team === 'blue') {
-                blueClicks++;
-                localStorage.setItem('blueClicks', blueClicks);
-            } else if (team === 'red') {
-                redClicks++;
-                localStorage.setItem('redClicks', redClicks);
-            }
-
-            // Update displayed counts
-            document.getElementById('blue-count').textContent = blueClicks;
-            document.getElementById('red-count').textContent = redClicks;
-        }
-    </script>
-</body>
-</html>
+<script type="text/javascript">
+	atOptions = {
+		'key' : '29e25146e02d163d4214ae0af4062f8d',
+		'format' : 'iframe',
+		'height' : 60,
+		'width' : 468,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/29e25146e02d163d4214ae0af4062f8d/invoke.js"></script>
